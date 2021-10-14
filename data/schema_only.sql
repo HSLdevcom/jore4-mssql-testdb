@@ -90,3 +90,133 @@ CREATE CLUSTERED INDEX jr_piste_cind ON jr_piste (lnkverkko, lnkalkusolmu, lnklo
 GO
 CREATE UNIQUE INDEX jr_piste_uind ON jr_piste (pisid)
 GO
+--
+-- Create jr_linja
+--
+CREATE TABLE jr_linja
+(
+    lintunnus      VARCHAR(6) NOT NULL,
+    linperusreitti VARCHAR(6),
+    linvoimast     DATETIME2(3),
+    linvoimviimpvm DATETIME2(3),
+    linjoukkollaji VARCHAR(2),
+    lintilorg      VARCHAR(3),
+    linverkko      VARCHAR,
+    linryhma       VARCHAR(3),
+    linkuka        VARCHAR(20),
+    linviimpvm     DATETIME2(3),
+    linjlkohde     VARCHAR(6),
+    id             VARCHAR(4),
+    vaihtoaika     INT,
+    linkorvtyyppi  VARCHAR(2),
+    puhelinnumero  VARCHAR(20)
+)
+GO
+CREATE UNIQUE CLUSTERED INDEX jr_linja_cind ON jr_linja (lintunnus)
+GO
+--
+-- Create jr_linjannimet
+--
+CREATE TABLE jr_linjannimet
+(
+    lintunnus   VARCHAR(6)   NOT NULL,
+    linalkupvm  DATETIME2(3) NOT NULL,
+    linloppupvm DATETIME2(3),
+    linnimi     VARCHAR(60)  NOT NULL,
+    linnimilyh  VARCHAR(20),
+    linnimir    VARCHAR(60),
+    linnimilyhr VARCHAR(20),
+    linlahtop1  VARCHAR(30),
+    linlahtop1r VARCHAR(30),
+    linlahtop2  VARCHAR(30),
+    linlahtop2r VARCHAR(30),
+    linkuka     VARCHAR(20),
+    linviimpvm  DATETIME2(3),
+    linlijpvm   DATETIME2(3)
+)
+GO
+CREATE UNIQUE CLUSTERED INDEX jr_linjannimet_cind ON jr_linjannimet (lintunnus, linalkupvm)
+GO
+CREATE INDEX jr_linjannimet_mind1 ON jr_linjannimet (linnimi, linalkupvm)
+GO
+CREATE TABLE jr_reitti
+(
+    reitunnus   VARCHAR(6) NOT NULL,
+    reinimi     VARCHAR(60),
+    reinimilyh  VARCHAR(20),
+    reinimir    VARCHAR(60),
+    reinimilyhr VARCHAR(20),
+    lintunnus   VARCHAR(6) NOT NULL,
+    reikuka     VARCHAR(20),
+    reiviimpvm  DATETIME2(3)
+)
+GO
+CREATE UNIQUE CLUSTERED INDEX jr_reitti_cind ON jr_reitti (reitunnus)
+GO
+CREATE TABLE jr_reitinsuunta
+(
+    reitunnus      VARCHAR(6)   NOT NULL,
+    suusuunta      CHAR         NOT NULL,
+    suuvoimast     DATETIME2(3) NOT NULL,
+    suuvoimviimpvm DATETIME2(3) NOT NULL,
+    suulahpaik     VARCHAR(20),
+    suulahpaikr    VARCHAR(20),
+    suupaapaik     VARCHAR(20),
+    suupaapaikr    VARCHAR(20),
+    suuensppy      CHAR(7),
+    suupituus      INT,
+    suukuka        VARCHAR(20),
+    suuviimpvm     DATETIME2(3),
+    suunimilyh     VARCHAR(20),
+    suunimilyhr    VARCHAR(20),
+    suunimi        VARCHAR(60),
+    suunimir       VARCHAR(60),
+    suuhis         VARCHAR,
+    pyssade        INT,
+    kirjaan        VARCHAR,
+    nettiin        VARCHAR,
+    kirjasarake    INT,
+    nettisarake    INT,
+    poikkeusreitti CHAR
+)
+GO
+CREATE UNIQUE CLUSTERED INDEX jr_reitinsuunta_cind ON jr_reitinsuunta (reitunnus, suusuunta, suuvoimast)
+GO
+
+CREATE TABLE jr_pysakki
+(
+    soltunnus      VARCHAR(6)    NOT NULL,
+    pyskunta       VARCHAR(3)    NOT NULL,
+    pysnimi        VARCHAR(20)   NOT NULL,
+    pysnimir       VARCHAR(20)   NOT NULL,
+    pyspaikannimi  VARCHAR(20),
+    pyspaikannimir VARCHAR(20),
+    pysosoite      VARCHAR(20)   NOT NULL,
+    pysosoiter     VARCHAR(20)   NOT NULL,
+    pysvaihtopys   VARCHAR(1),
+    pyskuka        VARCHAR(20),
+    pysviimpvm     DATETIME2(3)  NOT NULL,
+    pyslaituri     VARCHAR(3),
+    pyskatos       VARCHAR(2)    NOT NULL,
+    pystyyppi      VARCHAR(2),
+    pyssade        INT           NOT NULL,
+    pyssuunta      VARCHAR(20),
+    paitunnus      VARCHAR(6),
+    terminaali     VARCHAR(10),
+    kutsuplus      VARCHAR(1),
+    kutsuplusvyo   VARCHAR(2),
+    kulkusuunta    VARCHAR(20),
+    kutsuplusprior VARCHAR(2),
+    id             INT,
+    pysalueid      VARCHAR(6),
+    tariffi        VARCHAR(3)   NOT NULL,
+    elynumero      VARCHAR(10),
+    pysnimipitka   VARCHAR(60),
+    pysnimipitkar  VARCHAR(60),
+    nimiviimpvm    DATETIME2(3),
+    vyohyke        VARCHAR(6)   NOT NULL,
+    postinro       VARCHAR(5)
+)
+GO
+CREATE UNIQUE CLUSTERED INDEX jr_pysakki_cind ON jr_pysakki (soltunnus)
+GO
