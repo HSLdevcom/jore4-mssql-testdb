@@ -136,16 +136,14 @@ jobs:
         run: |
           docker run -d --rm -p 1433:1433 --name mssql -e SA_PASSWORD="$SA_PASSWORD" ${{ matrix.volumeMapping }} $IMAGE_NAME:${{ matrix.dockerImage }}-$COMMIT_ID
 
-      - name:
-          Verify that dockerized MSSQL database is up and can be connected to
+      - name: Verify that dockerized MSSQL database is up and can be connected to
         uses: HSLdevcom/jore4-tools/github-actions/healthcheck@healthcheck-v1
         with:
           command:
             '/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P "$SA_PASSWORD" -d
             master -Q "SELECT ''OK'';"'
 
-      - name:
-          Verify that the proper sql dumps got imported (diff expected results)
+      - name: Verify that the proper sql dumps got imported (diff expected results)
         env:
           # query for listing all available database names
           DB_QUERY: "SELECT name FROM master.sys.databases ORDER BY name;"
@@ -153,3 +151,28 @@ jobs:
           /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P "$SA_PASSWORD" -d master -Q "$DB_QUERY" > dbresults.txt
           echo "${{ matrix.expectedOutput }}" > expectedresults.txt
           diff --ignore-all-space --ignore-blank-lines dbresults.txt expectedresults.txt
+
+  run_e2e_tests:
+    needs: push_to_registry
+    name: Run E2E tests
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Extract metadata to env variables
+        uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
+
+      - name: start e2e env
+        uses: HSLdevcom/jore4-flux/github-actions/setup-e2e-environment@setup-e2e-environment-v1
+        with:
+          mssqltestdb_version: $IMAGE_NAME:schema-only-$COMMIT_ID
+
+      - name: run e2e smoke tests
+        id: tests
+        uses: HSLdevcom/jore4-robot/github-actions/run-rf-tests@actions-v1
+        with:
+          included_tag: smoke
+          e2e_username: ${{ secrets.ROBOT_HSLID_EMAIL }}
+          e2e_password: ${{ secrets.ROBOT_HSLID_PASSWORD }}
+
+      - name: upload test results
+        if: always()
+        uses: HSLdevcom/jore4-robot/github-actions/upload-results@actions-v1
