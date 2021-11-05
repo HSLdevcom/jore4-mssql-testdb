@@ -20,7 +20,7 @@ function import_from_folder {
 
 function wait_and_populate {
     echo "Waiting for MSSQL to start..."
-    /usr/src/app/scripts/wait-for-it.sh --host=localhost --port=1433 --timeout=30
+    /usr/src/app/scripts/wait-for-it.sh --host=localhost --port=1433 --timeout=120
 
     # We must wait a few additional seconds, otherwise login might fail
     # with "Error: 18456, Severity: 14, State: 7."

@@ -25,7 +25,7 @@ COPY ./scripts /usr/src/app/scripts
 # Entrypoint for loading sql dumps and starting the mssql server
 CMD /bin/bash ./scripts/entrypoint.sh
 
-HEALTHCHECK --interval=5s --timeout=5s --start-period=20s --retries=20 \
+HEALTHCHECK --interval=5s --timeout=5s --start-period=60s --retries=50 \
     CMD /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -Q "SELECT 1"
 
 # extends the :empty image and copies the init data to the /initialize folder
