@@ -18,13 +18,22 @@ function import_from_folder {
         /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -d master -i "{}"
 }
 
+function wait_for_startup {
+    RETRIES=24
+    WAIT_BETWEEN=5
+    for i in $(seq 1 $RETRIES); do
+        sleep $WAIT_BETWEEN
+        echo "Checking if MSSQL server can be connected to. Trial #$i"
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -d master \
+            -Q "SELECT 1;" && echo "Success!" && return 0
+    done
+    echo "Could not connect to MSSQL server"
+    exit 1
+}
+
 function wait_and_populate {
     echo "Waiting for MSSQL to start..."
-    /usr/src/app/scripts/wait-for-it.sh --host=localhost --port=1433 --timeout=120
-
-    # We must wait a few additional seconds, otherwise login might fail
-    # with "Error: 18456, Severity: 14, State: 7."
-    sleep 5s
+    wait_for_startup
 
     echo "Initialize the MS SQL database contents..."
     import_from_folder "/initialize"
@@ -37,6 +46,8 @@ function wait_and_populate {
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -d master \
         -Q "ALTER LOGIN sa WITH PASSWORD = '${SA_PASSWORD_FINAL}' OLD_PASSWORD = '${SA_PASSWORD}';"
     SA_PASSWORD="$SA_PASSWORD_FINAL"
+
+    echo "MSSQL container is ready to accept connections"
 }
 
 # wait for the server to start up and initialize it with the given SQL dump (in the background)
