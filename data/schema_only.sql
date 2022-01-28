@@ -253,3 +253,18 @@ CREATE TABLE jr_pysakki
 GO
 CREATE UNIQUE CLUSTERED INDEX jr_pysakki_cind ON jr_pysakki (soltunnus)
 GO
+
+CREATE TABLE jr_via_nimet
+(
+    relid           INT          NOT NULL,
+    maaranpaa1      VARCHAR(30),
+    maaranpaa1r     VARCHAR(30),
+    maaranpaa2      VARCHAR(30),
+    maaranpaa2r     VARCHAR(30),
+    viasuomi        VARCHAR(30),
+    viaruotsi       VARCHAR(30)
+)
+
+GO
+CREATE UNIQUE CLUSTERED INDEX jr_via_nimet_cind ON jr_via_nimet (relid)
+GO
