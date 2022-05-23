@@ -268,3 +268,10 @@ CREATE TABLE jr_via_nimet
 GO
 CREATE UNIQUE CLUSTERED INDEX jr_via_nimet_cind ON jr_via_nimet (relid)
 GO
+
+CREATE TABLE jr_linja_vaatimus (
+	lintunnus varchar(12) COLLATE Finnish_Swedish_CS_AS NOT NULL,
+	kookoodi varchar(20) COLLATE Finnish_Swedish_CS_AS NOT NULL,
+	kooselite varchar(100) COLLATE Finnish_Swedish_CS_AS NOT NULL
+)
+GO
