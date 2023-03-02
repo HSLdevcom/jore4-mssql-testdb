@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Get metadata as environment variables
         uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
@@ -43,7 +43,7 @@ jobs:
             --target schema-only .
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.JORE4_DOCKERHUB_USER }}
           password: ${{ secrets.JORE4_DOCKERHUB_TOKEN }}
@@ -127,7 +127,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Get metadata as environment variables
         uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
@@ -136,14 +136,16 @@ jobs:
         run: |
           docker run -d --rm -p 1433:1433 --name mssql -e SA_PASSWORD="$SA_PASSWORD" ${{ matrix.volumeMapping }} $IMAGE_NAME:${{ matrix.dockerImage }}-$COMMIT_ID
 
-      - name: Verify that dockerized MSSQL database is up and can be connected to
+      - name:
+          Verify that dockerized MSSQL database is up and can be connected to
         uses: HSLdevcom/jore4-tools/github-actions/healthcheck@healthcheck-v1
         with:
           command:
             '/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P "$SA_PASSWORD" -d
             master -Q "SELECT ''OK'';"'
 
-      - name: Verify that the proper sql dumps got imported (diff expected results)
+      - name:
+          Verify that the proper sql dumps got imported (diff expected results)
         env:
           # query for listing all available database names
           DB_QUERY: "SELECT name FROM master.sys.databases ORDER BY name;"
