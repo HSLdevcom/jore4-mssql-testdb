@@ -13,30 +13,30 @@ GO
 CREATE TABLE jr_solmu
 (
     soltunnus    CHAR(7) NOT NULL,
-    soltyyppi    CHAR    NOT NULL,
+    soltyyppi    CHAR(1) NOT NULL,
     sollistunnus VARCHAR(4),
-    solmapiste   VARCHAR,
-    solx         NUMERIC(7),
-    soly         NUMERIC(7),
+    solmapiste   VARCHAR(1),
+    solx         NUMERIC(7, 0),
+    soly         NUMERIC(7, 0),
     solmx        NUMERIC(8, 6),
     solmy        NUMERIC(8, 6),
     solkuka      VARCHAR(20),
     solviimpvm   DATETIME2(3),
-    solstx       NUMERIC(7),
-    solsty       NUMERIC(7),
-    solx3        NUMERIC(7),
-    soly3        NUMERIC(7),
-    solstx3      NUMERIC(7),
-    solsty3      NUMERIC(7),
+    solstx       NUMERIC(7, 0),
+    solsty       NUMERIC(7, 0),
+    solx3        NUMERIC(7, 0),
+    soly3        NUMERIC(7, 0),
+    solstx3      NUMERIC(7, 0),
+    solsty3      NUMERIC(7, 0),
     solstmx      NUMERIC(8, 6),
     solstmy      NUMERIC(8, 6),
     solkirjain   VARCHAR(2),
-    solhis       VARCHAR,
-    solox        NUMERIC(7),
-    soloy        NUMERIC(7),
+    solhis       VARCHAR(1),
+    solox        NUMERIC(7, 0),
+    soloy        NUMERIC(7, 0),
     solomx       NUMERIC(8, 6),
     solomy       NUMERIC(8, 6),
-    solotapa     VARCHAR,
+    solotapa     VARCHAR(1),
     mittpvm      DATETIME2(3),
     mkjmx        NUMERIC(8, 6),
     mkjmy        NUMERIC(8, 6)
@@ -49,7 +49,7 @@ GO
 --
 CREATE TABLE jr_linkki
 (
-    lnkverkko     CHAR    NOT NULL,
+    lnkverkko     CHAR(1) NOT NULL,
     lnkalkusolmu  CHAR(7) NOT NULL,
     lnkloppusolmu CHAR(7) NOT NULL,
     lnkmitpituus  INT,
@@ -58,12 +58,12 @@ CREATE TABLE jr_linkki
     katkunta      CHAR(3),
     katnimi       VARCHAR(40),
     kaoosnro      SMALLINT,
-    lnksuunta     CHAR,
+    lnksuunta     CHAR(1),
     lnkosnro      SMALLINT,
-    lnkostrk      VARCHAR,
+    lnkostrk      VARCHAR(1),
     lnkkuka       VARCHAR(20),
     lnkviimpvm    DATETIME2(3),
-    lnkhis        VARCHAR
+    lnkhis        VARCHAR(1)
 )
 GO
 CREATE UNIQUE CLUSTERED INDEX jr_linkki_cind ON jr_linkki (lnkverkko, lnkalkusolmu, lnkloppusolmu)
@@ -73,13 +73,13 @@ GO
 --
 CREATE TABLE jr_piste
 (
-    lnkverkko     CHAR    NOT NULL,
+    lnkverkko     CHAR(1) NOT NULL,
     lnkalkusolmu  CHAR(7) NOT NULL,
     lnkloppusolmu CHAR(7) NOT NULL,
     pisjarjnro    INT     NOT NULL,
     pisid         INT     NOT NULL,
-    pisx          NUMERIC(7),
-    pisy          NUMERIC(7),
+    pisx          NUMERIC(7, 0),
+    pisy          NUMERIC(7, 0),
     pismx         NUMERIC(8, 6),
     pismy         NUMERIC(8, 6),
     piskuka       VARCHAR(20),
@@ -101,7 +101,7 @@ CREATE TABLE jr_linja
     linvoimviimpvm DATETIME2(3),
     linjoukkollaji VARCHAR(2),
     lintilorg      VARCHAR(3),
-    linverkko      VARCHAR,
+    linverkko      VARCHAR(1),
     linryhma       VARCHAR(3),
     linkuka        VARCHAR(20),
     linviimpvm     DATETIME2(3),
@@ -156,7 +156,7 @@ GO
 CREATE TABLE jr_reitinsuunta
 (
     reitunnus      VARCHAR(6)   NOT NULL,
-    suusuunta      CHAR         NOT NULL,
+    suusuunta      CHAR(1)      NOT NULL,
     suuvoimast     DATETIME2(3) NOT NULL,
     suuvoimviimpvm DATETIME2(3) NOT NULL,
     suulahpaik     VARCHAR(20),
@@ -171,13 +171,13 @@ CREATE TABLE jr_reitinsuunta
     suunimilyhr    VARCHAR(20),
     suunimi        VARCHAR(60),
     suunimir       VARCHAR(60),
-    suuhis         VARCHAR,
+    suuhis         VARCHAR(1),
     pyssade        INT,
-    kirjaan        VARCHAR,
-    nettiin        VARCHAR,
+    kirjaan        VARCHAR(1),
+    nettiin        VARCHAR(1),
     kirjasarake    INT,
     nettisarake    INT,
-    poikkeusreitti CHAR
+    poikkeusreitti CHAR(1)
 )
 GO
 CREATE UNIQUE CLUSTERED INDEX jr_reitinsuunta_cind ON jr_reitinsuunta (reitunnus, suusuunta, suuvoimast)
@@ -186,25 +186,25 @@ GO
 CREATE TABLE jr_reitinlinkki
 (
     reitunnus      VARCHAR(6)   NOT NULL,
-    suusuunta      CHAR         NOT NULL,
+    suusuunta      CHAR(1)      NOT NULL,
     suuvoimast     DATETIME2(3) NOT NULL,
     reljarjnro     SMALLINT     NOT NULL,
     relid          INT          NOT NULL,
-    relmatkaik     VARCHAR,
-    relohaikpys    VARCHAR,
-    relvpistaikpys VARCHAR,
-    relpysakki     VARCHAR,
-    lnkverkko      CHAR         NOT NULL,
+    relmatkaik     VARCHAR(1),
+    relohaikpys    VARCHAR(1),
+    relvpistaikpys VARCHAR(1),
+    relpysakki     VARCHAR(1),
+    lnkverkko      CHAR(1)      NOT NULL,
     lnkalkusolmu   CHAR(7)      NOT NULL,
     lnkloppusolmu  CHAR(7)      NOT NULL,
     relkuka        CHAR(20),
     relviimpvm     DATETIME2(3),
     pyssade        INT,
-    ajantaspys     VARCHAR,
-    liityntapys    VARCHAR,
-    paikka         VARCHAR,
-    kirjaan        VARCHAR,
-    nettiin        VARCHAR,
+    ajantaspys     VARCHAR(1),
+    liityntapys    VARCHAR(1),
+    paikka         VARCHAR(1),
+    kirjaan        VARCHAR(1),
+    nettiin        VARCHAR(1),
     kirjasarake    INT,
     nettisarake    INT
 )
@@ -218,21 +218,21 @@ GO
 
 CREATE TABLE jr_pysakki
 (
-    soltunnus      VARCHAR(6)    NOT NULL,
-    pyskunta       VARCHAR(3)    NOT NULL,
+    soltunnus      CHAR(7)       NOT NULL,
+    pyskunta       CHAR(3)       NOT NULL,
     pysnimi        VARCHAR(20)   NOT NULL,
-    pysnimir       VARCHAR(20)   NOT NULL,
+    pysnimir       VARCHAR(20),
     pyspaikannimi  VARCHAR(20),
     pyspaikannimir VARCHAR(20),
-    pysosoite      VARCHAR(20)   NOT NULL,
-    pysosoiter     VARCHAR(20)   NOT NULL,
+    pysosoite      VARCHAR(20),
+    pysosoiter     VARCHAR(20),
     pysvaihtopys   VARCHAR(1),
     pyskuka        VARCHAR(20),
-    pysviimpvm     DATETIME2(3)  NOT NULL,
-    pyslaituri     VARCHAR(3),
-    pyskatos       VARCHAR(2)    NOT NULL,
+    pysviimpvm     DATETIME2(3),
+    pyslaituri     VARCHAR(15),
+    pyskatos       VARCHAR(2),
     pystyyppi      VARCHAR(2),
-    pyssade        INT           NOT NULL,
+    pyssade        INT,
     pyssuunta      VARCHAR(20),
     paitunnus      VARCHAR(6),
     terminaali     VARCHAR(10),
@@ -242,12 +242,12 @@ CREATE TABLE jr_pysakki
     kutsuplusprior VARCHAR(2),
     id             INT,
     pysalueid      VARCHAR(6),
-    tariffi        VARCHAR(3)   NOT NULL,
+    tariffi        VARCHAR(3),
     elynumero      VARCHAR(10),
     pysnimipitka   VARCHAR(60),
     pysnimipitkar  VARCHAR(60),
     nimiviimpvm    DATETIME2(3),
-    vyohyke        VARCHAR(6)   NOT NULL,
+    vyohyke        VARCHAR(6),
     postinro       VARCHAR(5)
 )
 GO
@@ -257,12 +257,12 @@ GO
 CREATE TABLE jr_via_nimet
 (
     relid           INT          NOT NULL,
+    viasuomi        VARCHAR(30),
+    viaruotsi       VARCHAR(30),
     maaranpaa1      VARCHAR(30),
     maaranpaa1r     VARCHAR(30),
     maaranpaa2      VARCHAR(30),
-    maaranpaa2r     VARCHAR(30),
-    viasuomi        VARCHAR(30),
-    viaruotsi       VARCHAR(30)
+    maaranpaa2r     VARCHAR(30)
 )
 
 GO
