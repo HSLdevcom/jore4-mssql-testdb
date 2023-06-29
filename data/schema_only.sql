@@ -275,3 +275,12 @@ CREATE TABLE jr_linja_vaatimus (
 	kooselite varchar(100) COLLATE Finnish_Swedish_CS_AS NOT NULL
 )
 GO
+
+CREATE TABLE jr_paikka (
+	paitunnus varchar(6) COLLATE Finnish_Swedish_CS_AS NOT NULL,
+	nimi varchar(40) COLLATE Finnish_Swedish_CS_AS NOT NULL
+);
+GO
+
+CREATE UNIQUE CLUSTERED INDEX jr_paikka_cind ON jr_paikka (paitunnus);
+GO
