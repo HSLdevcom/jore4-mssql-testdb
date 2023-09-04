@@ -8,7 +8,7 @@ on:
 jobs:
   push_to_registry:
     name: Build & Push docker image to dockerhub
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -63,7 +63,7 @@ jobs:
   test-docker-images:
     name: verify that the docker images work
     needs: push_to_registry
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       SA_PASSWORD: "P@ssw0rd"
 
@@ -157,7 +157,7 @@ jobs:
   run_e2e_tests:
     needs: push_to_registry
     name: Run E2E tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Extract metadata to env variables
         uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
