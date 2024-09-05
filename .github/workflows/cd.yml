@@ -8,11 +8,12 @@ on:
 jobs:
   push_to_registry:
     name: Build & Push docker image to dockerhub
+    # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
     runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get metadata as environment variables
         uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
@@ -43,7 +44,7 @@ jobs:
             --target schema-only .
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.JORE4_DOCKERHUB_USER }}
           password: ${{ secrets.JORE4_DOCKERHUB_TOKEN }}
@@ -63,6 +64,7 @@ jobs:
   test-docker-images:
     name: verify that the docker images work
     needs: push_to_registry
+    # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
     runs-on: ubuntu-22.04
     env:
       SA_PASSWORD: "P@ssw0rd"
@@ -127,7 +129,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get metadata as environment variables
         uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
@@ -157,19 +159,14 @@ jobs:
   run_e2e_tests:
     needs: push_to_registry
     name: Run E2E tests
+    # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
     runs-on: ubuntu-22.04
     steps:
       - name: Extract metadata to env variables
         uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
 
-      - name: start e2e env
-        uses: HSLdevcom/jore4-tools/github-actions/setup-e2e-environment@setup-e2e-environment-v1
+      - name: Run e2e tests
+        uses: HSLdevcom/jore4-tools/github-actions/run-ci@main
         with:
           mssqltestdb_version:
             "${{ env.IMAGE_NAME }}:schema-only-${{ env.COMMIT_ID }}"
-
-      - name: Seed infrastructure links
-        uses: HSLdevcom/jore4-tools/github-actions/seed-infrastructure-links@seed-infrastructure-links-v1
-
-      - name: Run e2e tests
-        uses: HSLdevcom/jore4-tools/github-actions/run-cypress-tests@run-cypress-tests-v1
