@@ -9,7 +9,7 @@ jobs:
   push_to_registry:
     name: Build & Push docker image to dockerhub
     # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -65,7 +65,7 @@ jobs:
     name: verify that the docker images work
     needs: push_to_registry
     # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       SA_PASSWORD: "P@ssw0rd"
 
@@ -160,7 +160,7 @@ jobs:
     needs: push_to_registry
     name: Run E2E tests
     # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Extract metadata to env variables
         uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
