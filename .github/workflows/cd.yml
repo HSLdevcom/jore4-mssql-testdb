@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  push_to_registry:
+  publish_docker_image_to_docker_hub:
     name: Build & Push docker image to dockerhub
     # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
     runs-on: ubuntu-22.04
@@ -77,7 +77,7 @@ jobs:
 
   test-docker-images:
     name: verify that the docker images work
-    needs: push_to_registry
+    needs: publish_docker_image_to_docker_hub
     # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
     runs-on: ubuntu-22.04
     env:
@@ -171,7 +171,7 @@ jobs:
           diff --ignore-all-space --ignore-blank-lines dbresults.txt expectedresults.txt
 
   run_e2e_tests:
-    needs: push_to_registry
+    needs: publish_docker_image_to_docker_hub
     name: Run E2E tests
     # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
     runs-on: ubuntu-22.04
