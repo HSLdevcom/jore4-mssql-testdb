@@ -1,4 +1,8 @@
-FROM mcr.microsoft.com/mssql/server:2017-CU22-ubuntu-16.04 AS empty
+# Available tags can be found from
+# https://mcr.microsoft.com/en-us/artifact/mar/mssql/server/tags
+FROM mcr.microsoft.com/mssql/server:2022-CU18-ubuntu-22.04 AS empty
+
+USER root
 
 # Create workdir
 RUN mkdir -p /usr/src/app
@@ -21,7 +25,7 @@ ENV \
   MSSQL_PID=Developer
 
 # Copy startup scripts
-COPY ./scripts /usr/src/app/scripts
+COPY --chmod=755 --chown=mssql ./scripts /usr/src/app/scripts
 
 # Entrypoint for loading sql dumps and starting the mssql server
 CMD ["/bin/bash", "./scripts/entrypoint.sh"]
@@ -29,8 +33,12 @@ CMD ["/bin/bash", "./scripts/entrypoint.sh"]
 HEALTHCHECK --interval=5s --timeout=5s --start-period=30s --retries=30 \
     CMD /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -Q "SELECT 1"
 
+USER mssql
+
 # extends the :empty image and copies the init data to the /initialize folder
 # from which the entrypoint automatically load it
 FROM empty AS schema-only
 
-COPY ./data/schema_only.sql /initialize/init-data.sql
+USER root
+COPY --chmod=644 --chown=mssql ./data/schema_only.sql /initialize/init-data.sql
+USER mssql

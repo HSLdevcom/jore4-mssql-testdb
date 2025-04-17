@@ -15,7 +15,7 @@ SA_PASSWORD=$(generate_password)
 # find all .sql files from given folder and import them in alphabetical order
 function import_from_folder {
     find "$1" -name '*.sql' -print0 | sort -z | xargs -r0 -I{} \
-        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -d master -i "{}"
+        /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$SA_PASSWORD" -d master -i "{}"
 }
 
 function wait_for_startup {
@@ -24,7 +24,7 @@ function wait_for_startup {
     for i in $(seq 1 $RETRIES); do
         sleep $WAIT_BETWEEN
         echo "Checking if MSSQL server can be connected to. Trial #$i"
-        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -d master \
+        /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$SA_PASSWORD" -d master \
             -Q "SELECT 1;" && echo "Success!" && return 0
     done
     echo "Could not connect to MSSQL server"
@@ -43,7 +43,7 @@ function wait_and_populate {
 
     echo "Allow access to MSSQL instance"
     # set the password to the desired one so that loging in is enabled
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -d master \
+    /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$SA_PASSWORD" -d master \
         -Q "ALTER LOGIN sa WITH PASSWORD = '${SA_PASSWORD_FINAL}' OLD_PASSWORD = '${SA_PASSWORD}';"
     SA_PASSWORD="$SA_PASSWORD_FINAL"
 

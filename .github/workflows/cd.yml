@@ -9,7 +9,6 @@ on:
 jobs:
   publish_docker_image_to_docker_hub:
     name: Build & Push docker image to dockerhub
-    # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
     runs-on: ubuntu-22.04
 
     steps:
@@ -78,7 +77,6 @@ jobs:
   test-docker-images:
     name: verify that the docker images work
     needs: publish_docker_image_to_docker_hub
-    # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
     runs-on: ubuntu-22.04
     env:
       SA_PASSWORD: "P@ssw0rd"
