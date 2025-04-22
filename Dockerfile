@@ -16,14 +16,15 @@ EXPOSE 1433
 
 # The username is always "sa"
 # Password is to be defined with "SA_PASSWORD" environment variable
-ENV ACCEPT_EULA Y
-ENV MSSQL_PID Developer
+ENV \
+  ACCEPT_EULA=Y \
+  MSSQL_PID=Developer
 
 # Copy startup scripts
 COPY ./scripts /usr/src/app/scripts
 
 # Entrypoint for loading sql dumps and starting the mssql server
-CMD /bin/bash ./scripts/entrypoint.sh
+CMD ["/bin/bash", "./scripts/entrypoint.sh"]
 
 HEALTHCHECK --interval=5s --timeout=5s --start-period=30s --retries=30 \
     CMD /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -Q "SELECT 1"
