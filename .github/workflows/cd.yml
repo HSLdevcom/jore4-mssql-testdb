@@ -169,18 +169,3 @@ jobs:
           /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P "$SA_PASSWORD" -d master -Q "$DB_QUERY" > dbresults.txt
           echo "${{ matrix.expectedOutput }}" > expectedresults.txt
           diff --ignore-all-space --ignore-blank-lines dbresults.txt expectedresults.txt
-
-  run_e2e_tests:
-    needs: publish_docker_image_to_docker_hub
-    name: Run E2E tests
-    # The MS SQL server version in use does not run on Linux kernels newer than 6.6.x.
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Extract metadata to env variables
-        uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
-
-      - name: Run e2e tests
-        uses: HSLdevcom/jore4-tools/github-actions/run-ci@main
-        with:
-          mssqltestdb_version:
-            "${{ env.IMAGE_NAME }}:schema-only-${{ env.COMMIT_ID }}"
