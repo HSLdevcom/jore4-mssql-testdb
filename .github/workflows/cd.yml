@@ -9,7 +9,7 @@ on:
 jobs:
   publish_docker_image_to_docker_hub:
     name: Build & Push docker image to dockerhub
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -77,7 +77,7 @@ jobs:
   test-docker-images:
     name: verify that the docker images work
     needs: publish_docker_image_to_docker_hub
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       SA_PASSWORD: "P@ssw0rd"
 
@@ -146,24 +146,64 @@ jobs:
       - name: Get metadata as environment variables
         uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
 
+      - name: Read Current MS SQL Docker Image
+        id: docker
+        shell: bash
+        run: |
+          echo mssql_docker_image="$(grep FROM Dockerfile | sed -E 's/FROM *([^ ]*)( AS.*)?/\1/g' | head -n 1)" >> "${GITHUB_OUTPUT}"
+
       - name: Start up mssql docker container
         run: |
-          docker run -d --rm -p 1433:1433 --name mssql -e SA_PASSWORD="$SA_PASSWORD" ${{ matrix.volumeMapping }} $IMAGE_NAME:${{ matrix.dockerImage }}-$COMMIT_ID
+          # A custom network is used so that Docker containers can be referred with names instead of IPs
+          docker network rm hsl || true
+          docker network create -d bridge --subnet=10.240.0.0/24 hsl
+          docker network ls
+
+          docker run \
+            -d \
+            --rm \
+            -p 1433:1433 \
+            --name mssql \
+            --hostname mssql \
+            --network hsl \
+            -e SA_PASSWORD="$SA_PASSWORD" \
+            ${{ matrix.volumeMapping }} \
+            $IMAGE_NAME:${{ matrix.dockerImage }}-$COMMIT_ID
 
       - name:
           Verify that dockerized MSSQL database is up and can be connected to
         uses: HSLdevcom/jore4-tools/github-actions/healthcheck@healthcheck-v1
         with:
           command:
-            '/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P "$SA_PASSWORD" -d
-            master -Q "SELECT ''OK'';"'
-
+            'docker run
+              --network hsl
+              ${{ steps.docker.outputs.mssql_docker_image }}
+              /opt/mssql-tools18/bin/sqlcmd
+              -C
+              -S mssql
+              -U sa
+              -P "$SA_PASSWORD"
+              -d master
+              -Q "SELECT ''OK'';"'
       - name:
           Verify that the proper sql dumps got imported (diff expected results)
         env:
           # query for listing all available database names
           DB_QUERY: "SELECT name FROM master.sys.databases ORDER BY name;"
+        # A custom entrypoint needs to be used so that the output does not contain lines printed by
+        # the default entrypoint which would make the diff fail
         run: |
-          /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P "$SA_PASSWORD" -d master -Q "$DB_QUERY" > dbresults.txt
+          docker run \
+            --network hsl \
+            --entrypoint /opt/mssql-tools18/bin/sqlcmd \
+            ${{ steps.docker.outputs.mssql_docker_image }} \
+            -C \
+            -S mssql \
+            -U sa \
+            -P "$SA_PASSWORD" \
+            -d master \
+            -Q "$DB_QUERY" \
+            > dbresults.txt
+
           echo "${{ matrix.expectedOutput }}" > expectedresults.txt
           diff --ignore-all-space --ignore-blank-lines dbresults.txt expectedresults.txt
