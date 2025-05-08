@@ -31,7 +31,7 @@ COPY --chmod=755 --chown=mssql ./scripts /usr/src/app/scripts
 CMD ["/bin/bash", "./scripts/entrypoint.sh"]
 
 HEALTHCHECK --interval=5s --timeout=5s --start-period=30s --retries=30 \
-    CMD /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -Q "SELECT 1"
+    CMD /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$SA_PASSWORD" -Q "SELECT 1"
 
 USER mssql
 
