@@ -5,7 +5,7 @@ in production, only for running end-to-end tests and anonymizing jore3 productio
 dumps.
 
 Docker image is based on
-[mcr.microsoft.com/mssql/server](https://hub.docker.com/_/microsoft-mssql-server)
+[mcr.microsoft.com/mssql/server](https://mcr.microsoft.com/en-us/artifact/mar/mssql/server)
 
 ## Docker reference
 
