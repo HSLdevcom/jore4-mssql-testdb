@@ -76,7 +76,7 @@ jobs:
 
   test-docker-images:
     name: verify that the docker images work
-    needs: publish_docker_image_to_docker_hub
+    needs: publish_docker_image_to_acr
     runs-on: ubuntu-24.04
     env:
       SA_PASSWORD: "P@ssw0rd"
@@ -84,21 +84,8 @@ jobs:
     strategy:
       matrix:
         include:
-          # empty image, no test dumps are imported
-          - dockerImage: empty
-            volumeMapping: ""
-            expectedOutput: |
-              name
-              --------------------------------------------------------------------------------------------------------------------------------
-              master
-              model
-              msdb
-              tempdb
-
-              (4 rows affected)
-          # schema-only image, no test dumps are imported
-          - dockerImage: schema-only
-            volumeMapping: ""
+          # no test dumps are imported
+          - volumeMapping: ""
             expectedOutput: |
               name
               --------------------------------------------------------------------------------------------------------------------------------
@@ -109,23 +96,8 @@ jobs:
               tempdb
 
               (5 rows affected)
-          # empty image, but test dumps are imported
-          - dockerImage: empty
-            volumeMapping: ' -v "$(pwd)/docker-image-test-data:/data:ro"'
-            expectedOutput: |
-              name
-              --------------------------------------------------------------------------------------------------------------------------------
-              bardb
-              foodb
-              master
-              model
-              msdb
-              tempdb
-
-              (6 rows affected)
-          # schema-only image, also test dumps are imported
-          - dockerImage: schema-only
-            volumeMapping: ' -v "$(pwd)/docker-image-test-data:/data:ro"'
+          # test dumps are imported
+          - volumeMapping: ' -v "$(pwd)/docker-image-test-data:/data:ro"'
             expectedOutput: |
               name
               --------------------------------------------------------------------------------------------------------------------------------
@@ -168,7 +140,7 @@ jobs:
             --network hsl \
             -e SA_PASSWORD="$SA_PASSWORD" \
             ${{ matrix.volumeMapping }} \
-            $IMAGE_NAME:${{ matrix.dockerImage }}-$COMMIT_ID
+            "${{ needs.publish_docker_image_to_acr.outputs.docker_image }}"
 
       - name:
           Verify that dockerized MSSQL database is up and can be connected to
