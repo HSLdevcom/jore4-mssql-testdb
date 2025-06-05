@@ -62,9 +62,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Get metadata as environment variables
-        uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
-
       - name: Read Current MS SQL Docker Image
         id: docker
         shell: bash
