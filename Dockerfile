@@ -1,6 +1,6 @@
 # Available tags can be found from
 # https://mcr.microsoft.com/en-us/artifact/mar/mssql/server/tags
-FROM mcr.microsoft.com/mssql/server:2022-CU18-ubuntu-22.04 AS empty
+FROM mcr.microsoft.com/mssql/server:2022-CU23-ubuntu-22.04 AS empty
 
 USER root
 
