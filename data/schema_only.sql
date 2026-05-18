@@ -270,15 +270,15 @@ CREATE UNIQUE CLUSTERED INDEX jr_via_nimet_cind ON jr_via_nimet (relid)
 GO
 
 CREATE TABLE jr_linja_vaatimus (
-	lintunnus varchar(12) COLLATE Finnish_Swedish_CS_AS NOT NULL,
-	kookoodi varchar(20) COLLATE Finnish_Swedish_CS_AS NOT NULL,
-	kooselite varchar(100) COLLATE Finnish_Swedish_CS_AS NOT NULL
+	lintunnus varchar(12) NOT NULL,
+	kookoodi varchar(20) NOT NULL,
+	kooselite varchar(100) NOT NULL
 )
 GO
 
 CREATE TABLE jr_paikka (
-	paitunnus varchar(6) COLLATE Finnish_Swedish_CS_AS NOT NULL,
-	nimi varchar(40) COLLATE Finnish_Swedish_CS_AS NOT NULL
+	paitunnus varchar(6) NOT NULL,
+	nimi varchar(40) NOT NULL
 );
 GO
 
@@ -286,29 +286,29 @@ CREATE UNIQUE CLUSTERED INDEX jr_paikka_cind ON jr_paikka (paitunnus);
 GO
 
 CREATE TABLE jr_lij_pysakkialue (
-	pysalueid varchar(6) COLLATE Finnish_Swedish_CS_AS NOT NULL,
-	verkko char(1) COLLATE Finnish_Swedish_CS_AS NOT NULL,
-	nimi varchar(40) COLLATE Finnish_Swedish_CS_AS NOT NULL,
-	nimir varchar(40) COLLATE Finnish_Swedish_CS_AS NULL,
+	pysalueid varchar(6) NOT NULL,
+	verkko char(1) NOT NULL,
+	nimi varchar(40) NOT NULL,
+	nimir varchar(40) NULL,
 	solx numeric(7,0) NULL,
 	soly numeric(7,0) NULL,
 	solomx numeric(8,6) NULL,
 	solomy numeric(8,6) NULL,
-	lyhyttunnus varchar(2) COLLATE Finnish_Swedish_CS_AS NULL,
-	termid varchar(10) COLLATE Finnish_Swedish_CS_AS NULL,
+	lyhyttunnus varchar(2) NULL,
+	termid varchar(10) NULL,
 	tallpvm datetime2(3) NOT NULL,
-	tallentaja varchar(20) COLLATE Finnish_Swedish_CS_AS NOT NULL,
-	pysakkialueryhma varchar(2) COLLATE Finnish_Swedish_CS_AS NULL,
-	nimiuusi varchar(40) COLLATE Finnish_Swedish_CS_AS NULL,
-	nimiuusir varchar(40) COLLATE Finnish_Swedish_CS_AS NULL,
-	kuulutus varchar(100) COLLATE Finnish_Swedish_CS_AS NULL,
-	kuulutusr varchar(100) COLLATE Finnish_Swedish_CS_AS NULL,
-	kuulutuskolmas varchar(100) COLLATE Finnish_Swedish_CS_AS NULL,
-	kuulutusuusi varchar(100) COLLATE Finnish_Swedish_CS_AS NULL,
-	kuulutusuusir varchar(100) COLLATE Finnish_Swedish_CS_AS NULL,
-	kuulutusuusikolmas varchar(100) COLLATE Finnish_Swedish_CS_AS NULL,
+	tallentaja varchar(20) NOT NULL,
+	pysakkialueryhma varchar(2) NULL,
+	nimiuusi varchar(40) NULL,
+	nimiuusir varchar(40) NULL,
+	kuulutus varchar(100) NULL,
+	kuulutusr varchar(100) NULL,
+	kuulutuskolmas varchar(100) NULL,
+	kuulutusuusi varchar(100) NULL,
+	kuulutusuusir varchar(100) NULL,
+	kuulutusuusikolmas varchar(100) NULL,
 	voimastuusi datetime2(3) NULL,
-	kommentti varchar(600) COLLATE Finnish_Swedish_CS_AS NULL
+	kommentti varchar(600) NULL
 );
 GO
 
@@ -316,46 +316,46 @@ CREATE UNIQUE CLUSTERED INDEX jr_lij_pysakkialue_cind ON jr_lij_pysakkialue (pys
 GO
 
 CREATE TABLE jr_varustelutiedot_uusi (
-	tunnus char(7) COLLATE Finnish_Swedish_CS_AS NOT NULL,
-	jcd_nro varchar(15) COLLATE Finnish_Swedish_CS_AS NULL,
-	cc_nro varchar(15) COLLATE Finnish_Swedish_CS_AS NULL,
+	tunnus char(7) NOT NULL,
+	jcd_nro varchar(15) NULL,
+	cc_nro varchar(15) NULL,
 	nousijat int NULL,
-	pysakkityyppi varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
+	pysakkityyppi varchar(3) NULL,
 	kpl_pysakkityyppi int NULL,
-	liikennemuoto varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	katoksen_omistaja varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	aikataulut varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	aikataulutyyppi_hsl varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	aikataulutyyppi_hkl varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	kilvet varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	ilme varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	aikataulupohja varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	kartat_hsl varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
+	liikennemuoto varchar(3) NULL,
+	katoksen_omistaja varchar(3) NULL,
+	aikataulut varchar(3) NULL,
+	aikataulutyyppi_hsl varchar(3) NULL,
+	aikataulutyyppi_hkl varchar(3) NULL,
+	kilvet varchar(3) NULL,
+	ilme varchar(3) NULL,
+	aikataulupohja varchar(3) NULL,
+	kartat_hsl varchar(3) NULL,
 	kpl_kartat_hsl int NULL,
-	kartat_hkl varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
+	kartat_hkl varchar(3) NULL,
 	kpl_kartat_hkl int NULL,
-	muut_julisteet varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
+	muut_julisteet varchar(3) NULL,
 	kpl_muut_julisteet int NULL,
-	infonhoito varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	elyliikenne varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
+	infonhoito varchar(3) NULL,
+	elyliikenne varchar(3) NULL,
 	ajojarjestys int NULL,
-	lisavarusteet varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
+	lisavarusteet varchar(3) NULL,
 	kpl_lisavarusteet int NULL,
-	nfc_tunniste varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	sahko varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	nayttolaitteet varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	nayttolaitenro varchar(15) COLLATE Finnish_Swedish_CS_AS NULL,
-	katos_kunto varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	runkolinjavarustus varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	liikenne varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	kunnossapito varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	nettiosoite varchar(70) COLLATE Finnish_Swedish_CS_AS NULL,
-	selite varchar(100) COLLATE Finnish_Swedish_CS_AS NULL,
-	ohitusaikataulut varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	patterinaytto varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
-	jatk_sahkon_naytto varchar(3) COLLATE Finnish_Swedish_CS_AS NULL,
+	nfc_tunniste varchar(3) NULL,
+	sahko varchar(3) NULL,
+	nayttolaitteet varchar(3) NULL,
+	nayttolaitenro varchar(15) NULL,
+	katos_kunto varchar(3) NULL,
+	runkolinjavarustus varchar(3) NULL,
+	liikenne varchar(3) NULL,
+	kunnossapito varchar(3) NULL,
+	nettiosoite varchar(70) NULL,
+	selite varchar(100) NULL,
+	ohitusaikataulut varchar(3) NULL,
+	patterinaytto varchar(3) NULL,
+	jatk_sahkon_naytto varchar(3) NULL,
 	kpl_kilvet int NULL,
-	jakoalue varchar(3) COLLATE Finnish_Swedish_CS_AS NULL
+	jakoalue varchar(3) NULL
 );
 GO
 
@@ -363,7 +363,7 @@ CREATE UNIQUE CLUSTERED INDEX jr_varustelutiedot_uusi_cind ON jr_varustelutiedot
 GO
 
 CREATE TABLE jr_esteettomyys (
-	tunnus char(7) COLLATE Finnish_Swedish_CS_AS NOT NULL,
+	tunnus char(7) NOT NULL,
 	sivukaltevuus numeric(3,1) NULL,
 	pituuskaltevuus numeric(3,1) NULL,
 	min_leveys int NULL,
@@ -375,21 +375,21 @@ CREATE TABLE jr_esteettomyys (
 	suojaava_korkeus int NULL,
 	alapiena_korkeus int NULL,
 	penkki_korkeus int NULL,
-	roska_astia char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	vaara char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	katos char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	valaistus char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	varoitusalue char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	erotus_varoitusalue char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	erotus_odotusalue char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	esteeton_kulku char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	pyoratie_samassa char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	pyoratie_sijainti char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	pysakin_malli char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	esteettomyys char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	luokka char(1) COLLATE Finnish_Swedish_CS_AS NULL,
-	huomioitavaa varchar(120) COLLATE Finnish_Swedish_CS_AS NULL,
-	penkki char(1) COLLATE Finnish_Swedish_CS_AS NULL
+	roska_astia char(1) NULL,
+	vaara char(1) NULL,
+	katos char(1) NULL,
+	valaistus char(1) NULL,
+	varoitusalue char(1) NULL,
+	erotus_varoitusalue char(1) NULL,
+	erotus_odotusalue char(1) NULL,
+	esteeton_kulku char(1) NULL,
+	pyoratie_samassa char(1) NULL,
+	pyoratie_sijainti char(1) NULL,
+	pysakin_malli char(1) NULL,
+	esteettomyys char(1) NULL,
+	luokka char(1) NULL,
+	huomioitavaa varchar(120) NULL,
+	penkki char(1) NULL
 );
 GO
 
