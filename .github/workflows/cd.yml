@@ -28,7 +28,7 @@ jobs:
   test-docker-images:
     name: verify that the docker images work
     needs: publish_docker_image_to_acr
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     env:
       SA_PASSWORD: "P@ssw0rd"
 
@@ -64,7 +64,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Read Current MS SQL Docker Image
         id: docker
